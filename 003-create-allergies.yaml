@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-allergies-table
+      author: marko.bozic
+      changes:
+        - createTable:
+            schemaName: medical_record_service_db
+            tableName: allergies
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: health_record_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: allergen
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableSchemaName: medical_record_service_db
+            baseTableName: allergies
+            baseColumnNames: health_record_id
+            referencedTableSchemaName: medical_record_service_db
+            referencedTableName: player_health_record
+            referencedColumnNames: id
+            constraintName: fk_chronic_player_record

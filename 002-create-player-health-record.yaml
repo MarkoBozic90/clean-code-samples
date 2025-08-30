@@ -1,0 +1,82 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-player-health-service
+      author: marko.bozic
+      changes:
+        - createTable:
+            schemaName: medical_record_service_db
+            tableName: player_health_record
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+                    unique: true
+                    nullable: false
+              - column:
+                  name: player_id
+                  type: UUID
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: club_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    unique: false
+              - column:
+                  name: is_injured
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: injury_since
+                  type: DATE
+              - column:
+                  name: expected_return
+                  type: DATE
+              - column:
+                  name: created_by
+                  type: VARCHAR(50)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_modified_by
+                  type: VARCHAR(50)
+              - column:
+                  name: last_modified_at
+                  type: JAVA.SQL.TYPES.TIMESTAMP_WITH_TIMEZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - createIndex:
+            schemaName: medical_record_service_db
+            tableName: player_health_record
+            indexName: idx_club_player_id
+            columns:
+              - column: {name: club_id}
+              - column: {name: player_id}
+        - createIndex:
+            schemaName: medical_record_service_db
+            tableName: player_health_record
+            indexName: idx_hr_club_injured
+            columns:
+              - column: { name: club_id }
+              - column: { name: is_injured }
+
+        - createIndex:
+            schemaName: medical_record_service_db
+            tableName: player_health_record
+            indexName: idx_hr_club_expected_return
+            columns:
+              - column: { name: club_id }
+              - column: { name: expected_return }
